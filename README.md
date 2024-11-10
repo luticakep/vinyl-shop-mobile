@@ -140,3 +140,259 @@ Any variable that is used in the widget's `build()` can be affected by `setState
 `final` keywords are used to declare a variable that can be assigned only once and only known at runtime.
 
 </details>
+
+<details>
+<Summary><b>Assignment 8</b></summary>
+
+## Steps
+### Step 1: Create form page and display data in pop up message
+1. Create a new file called 'vinylentry_form.dart' and add the following code:
+```dart
+import 'package:flutter/material.dart';
+import 'package:vinyl_shop/widgets/left_drawer.dart';
+
+class VinylEntryFormPage extends StatefulWidget {
+  const VinylEntryFormPage({super.key});
+
+  @override
+  State<VinylEntryFormPage> createState() => _VinylEntryFormPageState();
+}
+
+class _VinylEntryFormPageState extends State<VinylEntryFormPage> {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Center(
+        child: Text(
+          'Add New Vinyl',
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      foregroundColor: Colors.white,
+    ),
+    // TODO: Add the created drawer here
+    body: Form(
+      child: SingleChildScrollView(), //makes the widgets scrollable
+    ),
+  );
+}
+```
+2. I added `_formKey` with value `GlobalKey<FormState>();` to the _VinylEntryFormPageState class to validate the form. In addition, I created the input widgets for the form, such as name, description, price, and quantity.
+
+3. For the text form field, I added the following code:
+```dart
+...
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+            hintText: "Vinyl name",
+            labelText: "Name",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+          onChanged: (String? value) {
+            setState(() {
+              _name = value!;
+            });
+          },
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return "Name cannot be empty!";
+            }
+            if (value.length > 100) {
+              return "Name cannot be more than 100 characters!";
+            }
+            return null;
+          },
+        ),
+      ),
+      ...
+    ],
+  ),
+```
+This will create a text form field for the vinyl name. The `onChanged` function is used to update the value of `_name` when the user types in the text field. The `validator` function is used to validate the input value. If the value is empty or more than 100 characters, an error message will be displayed. I also added another text from field as the next child for description, price, and quantity.
+
+4. I added a save button and display a pop-up message when the user presses the save button. The pop-up message will display the input values from the form.
+```dart
+...
+  Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(
+              Theme.of(context).colorScheme.secondary),
+        ),
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('New vinyl successfully added'),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Name: $_name'),
+                        Text('Description: $_description'),
+                        Text('Price: $_price'),
+                        Text('Quantity: $_quanity'),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _formKey.currentState!.reset();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+        child: const Text(
+          "Save",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    ),
+  ),
+...
+```
+
+### Step 2: Redirect user to the add form page when they press the `Add Product` button on the main page
+1. I added this line inside the `onTap` function in the `ItemCard` class to navigate to the `VinylEntryFormPage` when the user presses the `Add Product` button in the Home Page.
+```dart
+...
+  if (item.name == "Add Product") {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const VinylEntryFormPage(),
+      ),
+    );
+  }
+...
+```
+
+2. I also added a back button to the `VinylEntryFormPage` to navigate back to the Home Page (inside AppBar).
+```dart
+...
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  ),
+...
+```
+
+### Step 3: Creating a drawer
+1. Create a new file called 'left_drawer.dart' and add the following code:
+```dart
+import 'package:flutter/material.dart';
+import 'package:vinyl_shop/screens/menu.dart';
+import 'package:vinyl_shop/screens/vinylentry_form.dart';
+
+class LeftDrawer extends StatelessWidget {
+  const LeftDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            child: const Column(
+              children: [
+                Text(
+                  'Vinyl Shop',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(8)),
+                Text(
+                  "Find your favorite vinyl records!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home_rounded),
+            title: const Text('Home Page'),
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.album),
+            title: const Text('Add Vinyl'),
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VinylEntryFormPage(),
+                  ));
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+DrawerHeader section is used to display the title and subtitle of the drawer.
+The ListTile section is used to display the list of items(Home and Add Vinyl) in the drawer below the header. It also contains the onTap function to navigate to the respective page.
+PushReplacement is used to replace the current page with the new page.
+
+## Purpose of const in Flutter
+Const is used to create immutable data objects. The advantage of using const is that it can improve performance by reducing the number of objects created in memory. 
+- We should use const when the value of the object is known at compile time and will not change during runtime. (example: Text, Color) 
+- We should not use const when the value of the object is not known at compile time or will change during runtime. (example: Text that will be updated based on user input)
+
+## Column and Row
+Column: A widget that displays its children in a vertical array. Example: list of buttons (View, Add, Logout) in home page
+Row: A widget that displays its children in a horizontal array. Example: list of name, class, and npm in home page.
+
+## List of input elements I used on the form page
+- TextFormField: Used to get the input value from the user. Example: vinyl name, description, price, and quantity.
+- ElevatedButton: Used to create a button that can be pressed. Example: save button.
+- AlertDialog: Used to display a pop-up message. Example: display the input values from the form.
+
+Other input elements that can be used are:
+- DropdownButton: Used to create a dropdown list of items. Example: selecting a category.
+- Checkbox: Used to create a checkbox. Example: selecting multiple items.
+- Radio: Used to create a radio button. Example: selecting one item from a list.
+
+## How do you set the theme within a Flutter application to ensure consistency? Did you implement a theme in your application?
+Yes, I implement a theme for my application. 
+Inside my main.dart, I defined a theme using ThemeData constructor. I set the primary color to cyan and the secondary color to cyan[800]. 
+I used the primary color as my header for main page and the drawer header. 
+</details>
