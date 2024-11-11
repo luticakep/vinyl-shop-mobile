@@ -395,4 +395,11 @@ Other input elements that can be used are:
 Yes, I implement a theme for my application. 
 Inside my main.dart, I defined a theme using ThemeData constructor. I set the primary color to cyan and the secondary color to cyan[800]. 
 I used the primary color as my header for main page and the drawer header. 
+
+## How do you manage navigation in a multi-page Flutter application?
+In a multi-page Flutter application, we can manage navigation using the Navigator class.
+- To navigate to a new page, we can use the push method. Example: Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
+- To navigate back to the previous page, we can use the pop method. Example: Navigator.pop(context);
+- To replace the current page with a new page, we can use the pushReplacement method. Example: Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NewPage()));
+
 </details>
