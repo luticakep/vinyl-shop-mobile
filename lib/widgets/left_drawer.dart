@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vinyl_shop/screens/menu.dart';
+import 'package:vinyl_shop/screens/product_list.dart';
 import 'package:vinyl_shop/screens/vinylentry_form.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -61,6 +62,18 @@ class LeftDrawer extends StatelessWidget {
                     builder: (context) => const VinylEntryFormPage(),
                   ));
             },
+          ),
+          // ListTile Menu code
+          ListTile(
+              leading: const Icon(Icons.add_box),
+              title: const Text('Product List'),
+              onTap: () {
+                  // Route to the mood page
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProductPage()),
+                  );
+              },
           ),
         ],
       ),
