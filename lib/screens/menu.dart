@@ -3,7 +3,7 @@ import 'package:vinyl_shop/widgets/left_drawer.dart';
 import 'package:vinyl_shop/widgets/vinyl_card.dart';
 
 class MyHomePage extends StatelessWidget {
-  final String name = 'Kayla Soraya Djakaria'; // Name
+  final String name = 'Kayla Soraya'; // Name
   final String className = 'PBD'; // Class
   final String npm = '2306256381'; // NPM
   final List<ItemHomepage> items = [

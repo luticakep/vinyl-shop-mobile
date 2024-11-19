@@ -52,7 +52,7 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.album),
+            leading: const Icon(Icons.add_box),
             title: const Text('Add Vinyl'),
             // Redirection part to Vinyl Entry Form Page
             onTap: () {
@@ -65,7 +65,7 @@ class LeftDrawer extends StatelessWidget {
           ),
           // ListTile Menu code
           ListTile(
-              leading: const Icon(Icons.add_box),
+              leading: const Icon(Icons.album),
               title: const Text('Product List'),
               onTap: () {
                   // Route to the mood page
